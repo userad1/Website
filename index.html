@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPN Login</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 30px 20px 30px;
+  }
+
+  .custom-logo {
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .digital-shield {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+  }
+
+  .ring-1, .ring-2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border-style: solid;
+    opacity: 0.8;
+  }
+
+  .ring-1 {
+    width: 115px;
+    height: 115px;
+    border: 2px solid #00d4ff;
+    box-shadow: 0 0 10px #00d4ff;
+    animation: rotateRing 4s linear infinite;
+  }
+
+  .ring-2 {
+    width: 95px;
+    height: 95px;
+    border: 1.5px dashed #ff00cc;
+    animation: rotateRingReverse 3s linear infinite;
+  }
+
+  .shield-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65px;
+    height: 75px;
+    background: linear-gradient(135deg, #00d4ff, #0088aa);
+    clip-path: polygon(50% 0%, 100% 20%, 100% 70%, 50% 100%, 0% 70%, 0% 20%);
+    box-shadow: 0 0 20px #00d4ff;
+    animation: digitalPulse 1.5s ease-in-out infinite;
+  }
+
+  .logo-text {
+    text-align: center;
+    margin-top: 35px;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #00d4ff, #ff00cc, #00ffcc, #ff00cc);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientShift 2s ease infinite;
+    font-family: 'Poppins', 'Segoe UI', 'Arial Black', sans-serif;
+  }
+
+  .digital-line {
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00d4ff, #ff00cc, #00d4ff, transparent);
+    margin: 12px auto 0;
+    animation: linePulse 2s infinite;
+  }
+
+  .login-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+    margin: 40px auto;
+  }
+
+  .password-input {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+
+  .password-input input {
+    width: 100%;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    border-radius: 50px;
+    color: #00d4ff;
+    font-size: 18px;
+    font-family: monospace;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+
+  .password-input input:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  }
+
+  .password-input input::placeholder {
+    color: rgba(0, 212, 255, 0.5);
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .login-button {
+    width: 100%;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #00d4ff, #0088aa);
+    border: none;
+    border-radius: 50px;
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: monospace;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 0 15px #00d4ff;
+    text-transform: uppercase;
+  }
+
+  .login-btn:hover {
+    transform: scale(1.02);
+  }
+
+  .wave-boxes {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 30px;
+  }
+
+  .wave-card {
+    width: 130px;
+    padding: 10px;
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .wave-card:hover {
+    transform: scale(1.02);
+  }
+
+  .wave-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00d4ff, #ff00cc, #00d4ff);
+    background-size: 400% 400%;
+    border-radius: 22px;
+    z-index: -1;
+    animation: waveMove 4s ease infinite;
+    filter: blur(3px);
+    opacity: 0.4;
+  }
+
+  .wave-card .card-content {
+    background: #000000aa;
+    border-radius: 18px;
+    padding: 10px 8px;
+  }
+
+  .wave-card h3 {
+    color: rgba(0, 212, 255, 0.7);
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+
+  .wave-card p {
+    color: rgba(204, 204, 204, 0.5);
+    font-size: 9px;
+    font-family: monospace;
+  }
+
+  .signature {
+    text-align: center;
+    padding: 20px 0 10px;
+    border-top: 1px solid rgba(0, 212, 255, 0.3);
+    width: 100%;
+  }
+
+  .signature-text {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, #ff00cc, #00d4ff, #ffcc00, #ff00cc);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientShift 1.5s ease infinite;
+    letter-spacing: 3px;
+    padding: 10px 25px;
+    border-radius: 50px;
+    position: relative;
+  }
+
+  .signature-text::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff00cc, #00d4ff, #ffcc00);
+    border-radius: 50px;
+    z-index: -1;
+    filter: blur(8px);
+    opacity: 0.6;
+    animation: pulseGlow 1.5s ease infinite;
+  }
+
+  .signature-text::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000000aa;
+    border-radius: 50px;
+    z-index: -1;
+  }
+
+  .admin-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .admin-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .admin-title {
+    font-size: 52px;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    margin-top: 20px;
+    letter-spacing: 3px;
+    font-weight: bold;
+  }
+
+  .admin-middle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .admin-textarea {
+    width: 100%;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.4);
+    border-radius: 20px;
+    color: #00d4ff;
+    font-size: 16px;
+    font-family: monospace;
+    resize: vertical;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .admin-textarea:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  }
+
+  .admin-textarea::placeholder {
+    color: rgba(0, 212, 255, 0.5);
+    font-size: 14px;
+  }
+
+  .submit-data-btn {
+    margin-top: 25px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #00d4ff, #0088aa);
+    border: none;
+    border-radius: 50px;
+    color: #000;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: monospace;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #00d4ff;
+  }
+
+  .submit-data-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px #00d4ff;
+  }
+
+  .back-btn {
+    margin-bottom: 50px;
+    margin-top: 40px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #ff0000, #990000);
+    border: none;
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: monospace;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #ff0000;
+  }
+
+  .back-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff3333;
+  }
+
+  .secret-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .secret-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .secret-content {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 30px;
+    padding: 40px 30px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+  }
+
+  .secret-label {
+    font-size: 20px;
+    font-family: monospace;
+    color: #00d4ff;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .secret-display {
+    width: 100%;
+    padding: 18px 20px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #00d4ff;
+    border-radius: 20px;
+    color: #00ffcc;
+    font-size: 18px;
+    font-family: monospace;
+    text-align: center;
+    word-break: break-all;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+  }
+
+  .copy-btn {
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #00ffcc, #009977);
+    border: none;
+    border-radius: 50px;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: monospace;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #00ffcc;
+  }
+
+  .copy-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px #00ffcc;
+  }
+
+  .secret-back-btn {
+    margin-top: 40px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #ff0000, #990000);
+    border: none;
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: monospace;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #ff0000;
+  }
+
+  .secret-back-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff3333;
+  }
+
+  .error-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 0, 100, 0.9);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+    border: 1px solid #ff3366;
+    box-shadow: 0 0 20px rgba(255, 0, 100, 0.5);
+    animation: fadeInOut 2s ease forwards;
+    pointer-events: none;
+  }
+
+  .copy-message {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 212, 255, 0.9);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 2000;
+    animation: fadeInOut 2s ease forwards;
+    pointer-events: none;
+  }
+
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px);
+    }
+    15% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    85% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-20px);
+      visibility: hidden;
+    }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; filter: blur(6px); }
+    50% { opacity: 0.8; filter: blur(10px); }
+  }
+
+  @keyframes waveMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes rotateRing {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  @keyframes rotateRingReverse {
+    from { transform: translate(-50%, -50%) rotate(360deg); }
+    to { transform: translate(-50%, -50%) rotate(0deg); }
+  }
+
+  @keyframes digitalPulse {
+    0%, 100% { opacity: 0.8; box-shadow: 0 0 15px #00d4ff; }
+    50% { opacity: 1; box-shadow: 0 0 25px #00d4ff; }
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes linePulse {
+    0%, 100% { width: 100px; opacity: 0.6; }
+    50% { width: 140px; opacity: 1; }
+  }
+
+  @media (max-width: 550px) {
+    .wave-boxes { gap: 12px; margin: 15px 0 25px; }
+    .wave-card { width: 100px; }
+    .digital-shield { width: 90px; height: 90px; }
+    .shield-core { width: 50px; height: 60px; }
+    .ring-1 { width: 85px; height: 85px; }
+    .ring-2 { width: 70px; height: 70px; }
+    .logo-text { font-size: 28px; letter-spacing: 3px; }
+    .login-form { max-width: 280px; }
+    .signature-text { font-size: 18px; letter-spacing: 2px; }
+    .admin-title { font-size: 32px; }
+    .secret-content { padding: 25px 20px; }
+    .secret-label { font-size: 16px; }
+    .secret-display { font-size: 14px; }
+    .error-message, .copy-message { font-size: 12px; padding: 8px 18px; }
+    .back-btn, .submit-data-btn, .copy-btn, .secret-back-btn { font-size: 16px; padding: 10px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loginPage">
+  <div class="custom-logo">
+    <div class="digital-shield">
+      <div class="ring-1"></div>
+      <div class="ring-2"></div>
+      <div class="shield-core"></div>
+    </div>
+    <div class="logo-text">AmirParshin</div>
+    <div class="digital-line"></div>
+  </div>
+
+  <div class="login-form">
+    <div class="password-input">
+      <input type="password" id="passwordInput" placeholder="ENTER PASSWORD" autocomplete="off">
+    </div>
+    <div class="login-button">
+      <button class="login-btn" id="loginButton">LOGIN</button>
+    </div>
+  </div>
+
+  <div class="wave-boxes">
+    <div class="wave-card">
+      <div class="card-content">
+        <h3>HIGH SPEED</h3>
+        <p>Ultra-fast</p>
+      </div>
+    </div>
+    <div class="wave-card">
+      <div class="card-content">
+        <h3>SECURITY</h3>
+        <p>Encrypted</p>
+      </div>
+    </div>
+    <div class="wave-card">
+      <div class="card-content">
+        <h3>NO LIMITS</h3>
+        <p>Unblocked</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="signature">
+    <div class="signature-text">Made By Ali Dindar</div>
+  </div>
+</div>
+
+<div id="adminPage" class="admin-page">
+  <div class="admin-container">
+    <h1 class="admin-title">Welcome to Page Admin</h1>
+    <div class="admin-middle">
+      <textarea id="adminDataInput" class="admin-textarea" rows="4" placeholder="Type something here..."></textarea>
+      <button id="submitDataBtn" class="submit-data-btn">319670</button>
+    </div>
+    <button class="back-btn" id="backButton">BACK TO LOGIN</button>
+  </div>
+</div>
+
+<div id="secretPage" class="secret-page">
+  <div class="secret-container">
+    <div class="secret-content">
+      <div class="secret-label">📋 Received Data</div>
+      <div id="secretDisplay" class="secret-display"></div>
+      <button id="copyButton" class="copy-btn">📋 COPY TO CLIPBOARD</button>
+    </div>
+    <button id="secretBackButton" class="secret-back-btn">BACK TO LOGIN</button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var loginPage = document.getElementById('loginPage');
+    var adminPage = document.getElementById('adminPage');
+    var secretPage = document.getElementById('secretPage');
+    var passwordInput = document.getElementById('passwordInput');
+    var loginButton = document.getElementById('loginButton');
+    var backButton = document.getElementById('backButton');
+    var secretBackButton = document.getElementById('secretBackButton');
+    var adminDataInput = document.getElementById('adminDataInput');
+    var submitDataBtn = document.getElementById('submitDataBtn');
+    var secretDisplay = document.getElementById('secretDisplay');
+    var copyButton = document.getElementById('copyButton');
+
+    var storedData = localStorage.getItem('vpn_secret_data');
+    if (storedData === null) {
+      storedData = '';
+    }
+
+    function updateSecretDisplay() {
+      if (storedData && storedData.trim() !== '') {
+        secretDisplay.textContent = storedData;
+      } else {
+        secretDisplay.textContent = '(خالی)';
+      }
+    }
+
+    function showError(message) {
+      var existingError = document.querySelector('.error-message');
+      if (existingError) existingError.remove();
+      
+      var errorDiv = document.createElement('div');
+      errorDiv.className = 'error-message';
+      errorDiv.textContent = message;
+      document.body.appendChild(errorDiv);
+      
+      setTimeout(function() {
+        if (errorDiv && errorDiv.parentNode) errorDiv.remove();
+      }, 2000);
+    }
+
+    function showCopyMessage(message) {
+      var existingMsg = document.querySelector('.copy-message');
+      if (existingMsg) existingMsg.remove();
+      
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'copy-message';
+      msgDiv.textContent = message;
+      document.body.appendChild(msgDiv);
+      
+      setTimeout(function() {
+        if (msgDiv && msgDiv.parentNode) msgDiv.remove();
+      }, 2000);
+    }
+
+    function checkPassword() {
+      var password = passwordInput.value;
+      
+      if (password === '319670') {
+        loginPage.style.display = 'none';
+        updateSecretDisplay();
+        secretPage.style.display = 'block';
+        passwordInput.value = '';
+      } else if (password === 'Admin') {
+        loginPage.style.display = 'none';
+        adminPage.style.display = 'block';
+        passwordInput.value = '';
+      } else if (password !== '') {
+        showError('رمز ورود اشتباه است');
+        passwordInput.value = '';
+      }
+    }
+
+    function submitData() {
+      var inputData = adminDataInput.value;
+      if (inputData.trim() === '') {
+        showError('لطفا متنی را وارد کنید');
+        return;
+      }
+      storedData = inputData;
+      localStorage.setItem('vpn_secret_data', storedData);
+      adminDataInput.value = '';
+      showError('اطلاعات با موفقیت ذخیره شد');
+    }
+
+    function copyToClipboard() {
+      var textToCopy = storedData;
+      if (textToCopy && textToCopy.trim() !== '') {
+        try {
+          var textarea = document.createElement('textarea');
+          textarea.value = textToCopy;
+          textarea.style.position = 'fixed';
+          textarea.style.top = '-9999px';
+          textarea.style.left = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          textarea.setSelectionRange(0, textarea.value.length);
+          var success = document.execCommand('copy');
+          document.body.removeChild(textarea);
+          
+          if (success) {
+            showCopyMessage('✅ متن با موفقیت کپی شد!');
+          } else {
+            showError('خطا در کپی');
+          }
+        } catch(e) {
+          showError('خطا در کپی');
+        }
+      } else {
+        showError('متن موجود نیست');
+      }
+    }
+
+    function backToLogin() {
+      adminPage.style.display = 'none';
+      secretPage.style.display = 'none';
+      loginPage.style.display = 'flex';
+      loginPage.style.flexDirection = 'column';
+      loginPage.style.alignItems = 'center';
+    }
+
+    loginButton.addEventListener('click', checkPassword);
+    backButton.addEventListener('click', backToLogin);
+    secretBackButton.addEventListener('click', backToLogin);
+    submitDataBtn.addEventListener('click', submitData);
+    copyButton.addEventListener('click', copyToClipboard);
+    
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        checkPassword();
+      }
+    });
+
+    loginPage.style.display = 'flex';
+    loginPage.style.flexDirection = 'column';
+    loginPage.style.alignItems = 'center';
+    adminPage.style.display = 'none';
+    secretPage.style.display = 'none';
+  })();
+</script>
+</body>
+  </html>
